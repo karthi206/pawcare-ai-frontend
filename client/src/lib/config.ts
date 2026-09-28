@@ -3,7 +3,7 @@
 // In production (Vercel), requests go through the /api/* rewrite proxy
 // defined in vercel.json, which forwards them to the Render backend
 // server-side. This keeps the browser talking to a single origin
-// (pawcare-frontend-azure.vercel.app) so the httpOnly auth cookie is
+// (pawcare-frontend-five.vercel.app) so the httpOnly auth cookie is
 // treated as first-party — third-party cookie blocking (Safari, Firefox,
 // and increasingly Chrome) was silently breaking auth when the frontend
 // called onrender.com directly.
