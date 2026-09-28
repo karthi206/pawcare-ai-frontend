@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -17,11 +17,15 @@ import Register from "./pages/Register";
 import AdminPanel from "./pages/AdminPanel";
 import Profile from "./pages/Profile";
 import { RequireAuth } from "./components/RequireAuth";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 function Router() {
+  const [location] = useLocation();
+
   return (
     <AppLayout>
-      <Switch>
+      <ErrorBoundary key={location} level="route">
+        <Switch>
         {/* Guest-accessible pages */}
         <Route path="/" component={Landing} />
         <Route path="/disease-detection" component={DiseaseDetection} />
@@ -47,6 +51,7 @@ function Router() {
         </Route>
         <Route component={NotFound} />
       </Switch>
+      </ErrorBoundary>
     </AppLayout>
   );
 }
