@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   MapPin,
   Phone,
+  Mail,
   Bell,
   CheckCircle2,
   Loader2,
@@ -55,6 +56,7 @@ interface Ngo {
   id: number | string;
   name: string;
   phone?: string | null;
+  email?: string | null;
   address: string;
   lat: number;
   lng: number;
@@ -85,6 +87,7 @@ export default function NgoLocator() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [ngoName, setNgoName] = useState("");
   const [ngoPhone, setNgoPhone] = useState("");
+  const [ngoEmail, setNgoEmail] = useState("");
   const [ngoAddress, setNgoAddress] = useState("");
   const [ngoLat, setNgoLat] = useState("");
   const [ngoLng, setNgoLng] = useState("");
@@ -196,6 +199,7 @@ export default function NgoLocator() {
 
     const name = ngoName.trim();
     const phone = ngoPhone.trim();
+    const email = ngoEmail.trim() || undefined;
     const address = ngoAddress.trim();
     const lat = parseFloat(ngoLat);
     const lng = parseFloat(ngoLng);
@@ -231,6 +235,7 @@ export default function NgoLocator() {
         body: JSON.stringify({
           name,
           phone,
+          email,
           address,
           lat,
           lng,
@@ -250,6 +255,7 @@ export default function NgoLocator() {
       // Reset form
       setNgoName("");
       setNgoPhone("");
+      setNgoEmail("");
       setNgoAddress("");
       setNgoLat("");
       setNgoLng("");
@@ -426,6 +432,17 @@ export default function NgoLocator() {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="ngo-email">Contact Email (for case alert notifications)</Label>
+                <Input
+                  id="ngo-email"
+                  type="email"
+                  placeholder="e.g. alerts@pawsrescue.org"
+                  value={ngoEmail}
+                  onChange={(e) => setNgoEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="ngo-address">Physical Address *</Label>
                 <Input
                   id="ngo-address"
@@ -545,6 +562,7 @@ export default function NgoLocator() {
                         )}
                         <p className="text-muted-foreground text-xs">{ngo.address}</p>
                         {ngo.phone && <p className="text-xs font-medium">{ngo.phone}</p>}
+                        {ngo.email && <p className="text-xs text-muted-foreground">{ngo.email}</p>}
                       </div>
                     </Popup>
                   </Marker>
@@ -586,10 +604,18 @@ export default function NgoLocator() {
 
                       <div className="flex flex-wrap gap-1">
                         {ngo.source === "registered" ? (
-                          <Badge variant="outline" className="gap-1 border-primary/30 bg-primary/5 text-primary text-xs">
-                            <ShieldCheck className="w-3 h-3" />
-                            Verified Partner
-                          </Badge>
+                          <>
+                            <Badge variant="outline" className="gap-1 border-primary/30 bg-primary/5 text-primary text-xs">
+                              <ShieldCheck className="w-3 h-3" />
+                              Verified Partner
+                            </Badge>
+                            {ngo.email && (
+                              <Badge variant="outline" className="gap-1 border-emerald-300 bg-emerald-50 text-emerald-700 text-xs">
+                                <Mail className="w-3 h-3 text-emerald-600" />
+                                Email Alerts
+                              </Badge>
+                            )}
+                          </>
                         ) : (
                           getTypeBadge(ngo.type)
                         )}
@@ -607,6 +633,14 @@ export default function NgoLocator() {
                             <Phone className="w-4 h-4 text-primary shrink-0" />
                             <a href={`tel:${ngo.phone.replace(/\s/g, '')}`} className="hover:text-primary hover:underline">
                               {ngo.phone}
+                            </a>
+                          </div>
+                        )}
+                        {ngo.email && (
+                          <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                            <Mail className="w-4 h-4 text-primary shrink-0" />
+                            <a href={`mailto:${ngo.email}`} className="hover:text-primary hover:underline truncate">
+                              {ngo.email}
                             </a>
                           </div>
                         )}
