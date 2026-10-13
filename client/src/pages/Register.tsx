@@ -26,6 +26,12 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const result = await register({
@@ -153,6 +159,7 @@ export default function Register() {
                 placeholder="At least 8 characters"
                 minLength={8} 
               />
+              <p className="text-xs text-muted-foreground">Must be at least 8 characters</p>
             </div>
 
             {role === "vet" && (

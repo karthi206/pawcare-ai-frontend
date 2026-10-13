@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 import { apiFetch, setCsrfToken, safeParseJson } from "@/lib/api-client";
+import { queryClient } from "@/lib/queryClient";
 
 export interface User {
   id: number;
@@ -119,6 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // succeeded, so the UI never gets stuck showing a logged-in user.
       setUser(null);
       setCsrfToken(null);
+      queryClient.clear();
     }
   };
 
